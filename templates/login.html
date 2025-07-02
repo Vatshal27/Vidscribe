@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | EduCaption</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<main class="container">
+  <div class="form-card">
+    <h2>Login</h2>
+    <form onsubmit="event.preventDefault(); emailLogin();">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="divider">OR</div>
+
+    <button onclick="googleLogin()" class="google-btn">
+      <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Icon" class="google-icon">
+      Sign in with Google
+    </button>
+
+    <p>New user? <a href="{{ url_for('signup') }}">Create account</a></p>
+  </div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "{{ FIREBASE_API_KEY }}",
+    authDomain: "{{ FIREBASE_AUTH_DOMAIN }}",
+    projectId: "{{ FIREBASE_PROJECT_ID }}",
+    storageBucket: "{{ FIREBASE_STORAGE_BUCKET }}",
+    messagingSenderId: "{{ FIREBASE_MSG_SENDER_ID }}",
+    appId: "{{ FIREBASE_APP_ID }}",
+    measurementId: "{{ FIREBASE_MEASUREMENT_ID }}"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  
+  // Configure Google provider to reduce popup blocking
+  provider.setCustomParameters({
+    prompt: 'select_account'
+  });
+
+  // Helper function to make requests with proper CORS headers
+  async function makeAuthenticatedRequest(url, data) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      credentials: "include",
+      body: JSON.stringify(data)
+    });
+    
+    return response;
+  }
+
+  window.emailLogin = async () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    
+    if (!email || !password) {
+      alert("Please enter both email and password");
+      return;
+    }
+    
+    try {
+      console.log("Attempting email login...");
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      console.log("Email login successful, getting token...");
+      
+      const token = await userCred.user.getIdToken();
+      localStorage.setItem("firebase_id_token", token);
+      
+      console.log("Sending token to backend...");
+      const res = await makeAuthenticatedRequest("/callback", { idToken: token });
+      
+      const data = await res.json();
+      console.log("Backend response:", data);
+      
+      if (res.ok && data.status === "success") {
+        console.log("Login successful, redirecting...");
+        window.location.href = "/index";
+      } else {
+        alert("Login failed: " + (data.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Error: " + err.message);
+    }
+  };
+
+  window.googleLogin = async () => {
+    try {
+      console.log("Attempting Google login...");
+      
+      // Set up popup with specific window features to avoid blocking
+      const result = await signInWithPopup(auth, provider);
+      console.log("Google login successful, getting token...");
+      
+      const token = await result.user.getIdToken();
+      localStorage.setItem("firebase_id_token", token);
+      
+      console.log("Sending token to backend...");
+      const res = await makeAuthenticatedRequest("/callback", { idToken: token });
+      
+      const data = await res.json();
+      console.log("Backend response:", data);
+      
+      if (res.ok && data.status === "success") {
+        console.log("Google login successful, redirecting...");
+        window.location.href = "/index";
+      } else {
+        alert("Google login failed: " + (data.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Google Login error:", err);
+      
+      // Handle specific popup blocked errors
+      if (err.code === 'auth/popup-blocked') {
+        alert("Popup was blocked. Please allow popups for this site and try again.");
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        console.log("User closed the popup");
+      } else {
+        alert("Google Login Error: " + err.message);
+      }
+    }
+  };
+</script>
+</body>
+</html>

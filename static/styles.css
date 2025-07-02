@@ -1,0 +1,138 @@
+/* Global Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f0f0f0;
+  animation: fadeIn 1s ease-in;
+}
+
+/* Container */
+.container {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  animation: slideUp 0.8s ease;
+}
+
+/* Header */
+.container h1,
+.container h2 {
+  font-size: 2.5em;
+  margin-bottom: 25px;
+  color: #ffffffdd;
+}
+
+/* Form Elements */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="file"] {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  background-color: #ffffff10;
+  color: #ccc;
+  border: 1px solid #ffffff22;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+input[type="file"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="text"]:hover {
+  background-color: #ffffff15;
+}
+
+/* Button */
+button, input[type="submit"] {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.4s ease;
+  margin-top: 10px;
+  display: block;
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button:hover, input[type="submit"]:hover {
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  transform: scale(1.05);
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.google-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Message */
+.message {
+  margin-top: 20px;
+  font-style: italic;
+  color: #ddd;
+}
+
+/* Divider */
+.divider {
+  margin: 20px 0;
+  color: #ccc;
+  font-weight: bold;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Links */
+a {
+  color: #00c6ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
