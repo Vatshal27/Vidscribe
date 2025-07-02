@@ -1,4 +1,5 @@
-# 🎬 EduCaption (Vidscribe-07)
+# 🎬Vidscribe
+
 
 > **Auto-generate captions from videos, powered by OCR and Firebase.**  
 > A poetic fusion of machine vision and cloud magic.
