@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<<<<<<< HEAD
   <title>EduCaption - Video Caption Extractor</title>
   <style>
     * {
@@ -340,10 +341,49 @@ uploadForm.addEventListener('submit', async (e) => {
     
     const res = await fetch('/upload', {
       method: 'POST',
+=======
+  <title>Dashboard | EduCaption</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<main class="container">
+  <h2>Welcome to EduCaption Dashboard</h2>
+  <p>Upload your video below to generate captions:</p>
+  <form id="uploadForm">
+    <input type="file" id="video" accept="video/*" required>
+    <button type="submit">Upload & Process</button>
+  </form>
+  <div id="result" style="margin-top: 20px;"></div>
+</main>
+
+<script>
+document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const file = document.getElementById("video").files[0];
+  if (!file) return alert("Please select a video.");
+
+  const token = localStorage.getItem("firebase_id_token");
+  if (!token) {
+    alert("Not authenticated. Please login again.");
+    window.location.href = "/";
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("video", file);
+    
+    const res = await fetch("/upload", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token
+      },
+>>>>>>> 1c63e9777925cad8700e78ded7f403ddba8b497d
       body: formData
     });
     
     const data = await res.json();
+<<<<<<< HEAD
     
     if (data.status === 'success') {
       resultDiv.className = 'result success show';
@@ -369,6 +409,15 @@ uploadForm.addEventListener('submit', async (e) => {
     progressDiv.classList.remove('show');
     submitBtn.disabled = false;
     submitBtn.textContent = 'Upload & Process Video';
+=======
+    if (data.status === "success") {
+      document.getElementById("result").innerHTML = `<a href="${data.url}" target="_blank">Download Captions DOCX</a>`;
+    } else {
+      alert(data.error || "Upload failed");
+    }
+  } catch (err) {
+    alert("Error: " + err.message);
+>>>>>>> 1c63e9777925cad8700e78ded7f403ddba8b497d
   }
 });
 </script>
