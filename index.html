@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<<<<<<< HEAD
+  <title>EduCaption - Video Caption Extractor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .upload-area {
+      border: 3px dashed #d0d0d0;
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin-bottom: 24px;
+      background: #fafafa;
+    }
+
+    .upload-area:hover {
+      border-color: #667eea;
+      background: #f0f0ff;
+    }
+
+    .upload-area.dragover {
+      border-color: #667eea;
+      background: #e8ebff;
+      transform: scale(1.02);
+    }
+
+    .upload-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .upload-area p {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .file-name {
+      color: #667eea;
+      font-weight: 600;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .progress {
+      margin-top: 24px;
+      padding: 20px;
+      background: #f0f0ff;
+      border-radius: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    .progress.show {
+      display: block;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .progress p {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .result.success {
+      background: #d4edda;
+      border: 2px solid #28a745;
+    }
+
+    .result.error {
+      background: #f8d7da;
+      border: 2px solid #dc3545;
+    }
+
+    .result-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .result p {
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .result.success p {
+      color: #155724;
+    }
+
+    .result.error p {
+      color: #721c24;
+    }
+
+    .download-btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+      background: #218838;
+    }
+
+    .supported-formats {
+      text-align: center;
+      margin-top: 24px;
+      color: #999;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 32px 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .upload-area {
+        padding: 32px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+<main class="container">
+  <div class="header">
+    <div class="logo">🎬</div>
+    <h1>EduCaption</h1>
+    <p class="subtitle">Extract captions from your videos instantly</p>
+  </div>
+
+  <form id="uploadForm">
+    <div class="upload-area" id="uploadArea">
+      <div class="upload-icon">📤</div>
+      <p><strong>Click to upload</strong> or drag and drop</p>
+      <p style="font-size: 14px; color: #999;">Your video file here</p>
+      <div class="file-name" id="fileName"></div>
+      <input type="file" id="video" accept="video/*" required>
+    </div>
+    <button type="submit" class="btn" id="submitBtn">Upload & Process Video</button>
+  </form>
+
+  <div class="supported-formats">
+    Supports: MP4, WebM, AVI, MOV, MKV, FLV (Max: 500MB)
+  </div>
+
+  <div class="progress" id="progress">
+    <div class="spinner"></div>
+    <p>Processing your video... This may take a few minutes.</p>
+  </div>
+
+  <div class="result" id="result"></div>
+</main>
+
+<script>
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('video');
+const fileName = document.getElementById('fileName');
+const uploadForm = document.getElementById('uploadForm');
+const submitBtn = document.getElementById('submitBtn');
+const progressDiv = document.getElementById('progress');
+const resultDiv = document.getElementById('result');
+
+// Click to upload
+uploadArea.addEventListener('click', () => fileInput.click());
+
+// File selection
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    fileName.textContent = `📁 ${file.name}`;
+  }
+});
+
+// Drag and drop
+uploadArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+  uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('video/')) {
+    fileInput.files = e.dataTransfer.files;
+    fileName.textContent = `📁 ${file.name}`;
+  }
+});
+
+// Form submission
+uploadForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const file = fileInput.files[0];
+  if (!file) {
+    alert('Please select a video file.');
+    return;
+  }
+
+  // Show progress
+  progressDiv.classList.add('show');
+  resultDiv.classList.remove('show');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Processing...';
+
+  try {
+    const formData = new FormData();
+    formData.append('video', file);
+    
+    const res = await fetch('/upload', {
+      method: 'POST',
+=======
+  <title>Dashboard | EduCaption</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<main class="container">
+  <h2>Welcome to EduCaption Dashboard</h2>
+  <p>Upload your video below to generate captions:</p>
+  <form id="uploadForm">
+    <input type="file" id="video" accept="video/*" required>
+    <button type="submit">Upload & Process</button>
+  </form>
+  <div id="result" style="margin-top: 20px;"></div>
+</main>
+
+<script>
+document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const file = document.getElementById("video").files[0];
+  if (!file) return alert("Please select a video.");
+
+  const token = localStorage.getItem("firebase_id_token");
+  if (!token) {
+    alert("Not authenticated. Please login again.");
+    window.location.href = "/";
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("video", file);
+    
+    const res = await fetch("/upload", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token
+      },
+>>>>>>> 1c63e9777925cad8700e78ded7f403ddba8b497d
+      body: formData
+    });
+    
+    const data = await res.json();
+<<<<<<< HEAD
+    
+    if (data.status === 'success') {
+      resultDiv.className = 'result success show';
+      resultDiv.innerHTML = `
+        <div class="result-icon">✅</div>
+        <p>Captions extracted successfully!</p>
+        <a href="${data.download_url}" class="download-btn" download>📥 Download Captions</a>
+      `;
+    } else {
+      resultDiv.className = 'result error show';
+      resultDiv.innerHTML = `
+        <div class="result-icon">❌</div>
+        <p>Error: ${data.error || 'Upload failed. Please try again.'}</p>
+      `;
+    }
+  } catch (err) {
+    resultDiv.className = 'result error show';
+    resultDiv.innerHTML = `
+      <div class="result-icon">❌</div>
+      <p>Network Error: ${err.message}</p>
+    `;
+  } finally {
+    progressDiv.classList.remove('show');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Upload & Process Video';
+=======
+    if (data.status === "success") {
+      document.getElementById("result").innerHTML = `<a href="${data.url}" target="_blank">Download Captions DOCX</a>`;
+    } else {
+      alert(data.error || "Upload failed");
+    }
+  } catch (err) {
+    alert("Error: " + err.message);
+>>>>>>> 1c63e9777925cad8700e78ded7f403ddba8b497d
+  }
+});
+</script>
+</body>
+</html>
